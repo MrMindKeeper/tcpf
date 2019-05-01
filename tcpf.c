@@ -8,11 +8,11 @@
 *
 *	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY
 *	This is a free packet crafting software which have many capabilities but of them few are
-*   Data Injection, DOS, DDOS and etc...
+*       Data Injection, DOS, DDOS and etc...
 *
 *	Guide: This software uses libpcap engine, before compiling this software please make sure
-*   you have libpcap-dev installed and compile the source with -lpcap parameter or using
-*   GCC as following: "gcc -o tcpf tcpf.c -lm -lpcap"
+*       you have libpcap-dev installed and compile the source with -lpcap parameter or using
+*       GCC as following: "gcc -o tcpf tcpf.c -lm -lpcap"
 */
 
 #include <stdio.h>
