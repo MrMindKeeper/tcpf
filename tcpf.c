@@ -171,7 +171,7 @@ int main (int argc, char *argv[])
     }
     if(flags == 1 && flagss != 1) syn = 0;
 
-    if(argc < 2 || argc > 18 || strcmp(argv[1], "--help") == 0 || destinationip == NULL){
+    if(argc < 2 || argc > 30 || strcmp(argv[1], "--help") == 0 || destinationip == NULL){
 	printf("Usage ./tcpf [Options]:\n");
 	printf("  -s		Set Source IP address, to specify a subnet, add x.x.x.x/x e.g. 127.0.0.1/8\n");
 	printf("  -d		Set Destination IP Address, to specify a subnet, add x.x.x.x/x e.g. 127.0.0.1/8\n");
