@@ -1,6 +1,6 @@
 /*
 	* (Peace be upon you)
-	* Buffer Overflow Exploit
+	* Brute Force Buffer Overflow Exploit
 	* By WhiteWizard
   
 	* Architecture Linux/Unix x64 (tested on kali linux x64)
