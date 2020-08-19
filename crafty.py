@@ -2,6 +2,12 @@ import socket
 import argparse
 import struct
 import binascii
+from uuid import getnode as get_mac
+import fcntl, struct
+from subprocess import Popen, PIPE
+import re
+import os
+from arprequest import ArpRequest
 
 # Ethernet Header
 argParser = argparse.ArgumentParser(description='Packet header details. This tool only support IPv4 at the moment.')
@@ -40,15 +46,43 @@ def argHandler(args, protocol):
     pEthernetIPv = ""
 
     if(args.smac == None):
-        pEthernetSrc = "00:00:00:00:00:00"
+        interface = "eth0"
+        macFile = open("/sys/class/net/"+interface+"/address", "r")
+        for lines in macFile:
+            if(len(lines) > 16 and len(lines)<19):
+                pEthernetSrc = lines
+    
+
+        pEthernetSrc = pEthernetSrc[:17]
     elif(len(args.smac) != 17):
         print("[-] Source MAC address is not valid")
         return -1
     else:
         pEthernetSrc = args.smac
-
+    
     if(args.dmac == None):
         pEthernetDst = "00:00:00:00:00:00"
+
+
+        # To be continued
+        dstIP = "127.0.0.1"
+        if(args.d == None):
+            dstIP = "127.0.0.1"
+        else:
+            dstIP = args.d
+        '''pid = Popen(["arp", "-n", dstIP], stdout=PIPE)
+        s = pid.communicate()[0]
+        dstMAC = "00:00:00:00:00:00"
+        if(":" in str(s)):
+            dstMAC = re.search(r"(([a-f\d]{1,2}\:){5}[a-f\d]{1,2})", str(s)).groups()[0]
+        else:
+            pingPID = Popen(["ping", "-c", "1", dstIP], stdout=PIPE)
+            pingS = pingPID.communicate()[0]
+            print(pingS)
+        print(dstMAC)
+        ar = ArpRequest('10.0.0.1', 'eth0')
+        ar.request()'''
+
     elif(len(args.dmac) != 17):
         print("[-] Destination MAC address is not valid")
         return -1
@@ -62,8 +96,8 @@ def argHandler(args, protocol):
         return -1
     else:
         pEthernetIPv = args.ipv
-        
-    EthernetHeader = parseEthernetHeader([pEthernetSrc, pEthernetDst, pEthernetIPv])
+    
+    EthernetHeader = parseEthernetHeader([pEthernetDst, pEthernetSrc, pEthernetIPv])
     IPHeader = parseIPHeader(args, protocol)
     protocolHeader = parseProtocolHeader(args)
     craftPacket(EthernetHeader, IPHeader, protocolHeader)
@@ -257,7 +291,7 @@ def parseIPHeader(args, protocol):
         if(len(ipHeaderChecksum) != 4):
             for i in range(1, 4):
                 ipHeaderChecksum = "0"+ipHeaderChecksum
-                if(len(ipHeaderCheckum) != 4):
+                if(len(ipHeaderChecksum) != 4):
                     continue
                 else:
                     break;
@@ -370,9 +404,9 @@ def parseProtocolHeader(args):
                     break;
 
     # Protocol Header Length
-    protocolHeaderLength = "000d"
+    protocolHeaderLength = "000e"
     if(args.l == None):
-        protocolHeaderLength="000d"
+        protocolHeaderLength="000e"
     elif(len(args.l) > 5):
         print("[-] Invalid Length")
         return -1
@@ -412,14 +446,13 @@ def parseProtocolHeader(args):
                 else:
                     break;
     
-    data = "48656c6c6f"
+    data = "48656c6c6f0a"
     if(args.data == None):
         data = data
     else:
         data = args.data
         data = data.encode('utf-8').hex()
     protocolHeader = bytes.fromhex(sourcePort+destinationPort+protocolHeaderLength+protocolHeaderChecksum+data)
-    print(protocolHeader)
     return protocolHeader
 
 def craftPacket(EthernetHeader, IPHeader, ProtocolHeader):
@@ -431,9 +464,9 @@ def craftPacket(EthernetHeader, IPHeader, ProtocolHeader):
         ethernet = ethernet+p
 
     if(args.v):
-        print('\t Ethernet Header: '+str(ethernet))
-        print('\t IP Header      : '+str(IPHeader))
-        print('\t Protocol Header: '+str(ProtocolHeader))
+        print('\t Ethernet Header: '+repr(ethernet))
+        print('\t IP Header      : '+repr(IPHeader))
+        print('\t Protocol Header: '+repr(ProtocolHeader))
     
     packet = ethernet + IPHeader + ProtocolHeader
     s.send(packet)
