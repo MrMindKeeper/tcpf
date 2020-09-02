@@ -457,7 +457,7 @@ def parseProtocolHeader(args):
 
 def craftPacket(EthernetHeader, IPHeader, ProtocolHeader):
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
-    s.bind(("eth0", 0))
+    s.bind(("eth0", 1234))
      
     ethernet = b''
     for p in EthernetHeader:
@@ -467,10 +467,10 @@ def craftPacket(EthernetHeader, IPHeader, ProtocolHeader):
         print('\t Ethernet Header: '+repr(ethernet))
         print('\t IP Header      : '+repr(IPHeader))
         print('\t Protocol Header: '+repr(ProtocolHeader))
-    
+   
+    #print(type(ethernet)+" "+type(IPHeader)+" "+type(ProtocolHeader))
     packet = ethernet + IPHeader + ProtocolHeader
     s.send(packet)
-
 
 protocol = "UDP"
 argHandler(args, protocol)
