@@ -2,8 +2,8 @@
 *	(Peace be upon you)
 *
 *	Tool Name: tcpf
-*	Author: Abdul Wajed <abdul.wajed@internetworkpath.com>
-*	Copyright (C) 2019 by Abdul Wajed
+*	Author: Abdul Wajed <abdul.wajed@neehack.com>
+*	Copyright (C) 2020 by Abdul Wajed
 *	Date  : 30-April-2019
 *
 *	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY
